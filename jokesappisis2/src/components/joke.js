@@ -30,7 +30,7 @@ function Joke(props) {
   if (characters !== null) {
     return (
       <div>
-        <h1>Marverl Characters</h1>
+        <h1>Marvel Characters</h1>
         {characters.map((value, index) => {
           console.log("entra1");
           return (
@@ -51,6 +51,7 @@ function Joke(props) {
     console.log("entra2");
     return (
       <div>
+        <h1>Marvel Characters</h1>
         <p>Loading... (Check your connection)</p>
       </div>
     );
