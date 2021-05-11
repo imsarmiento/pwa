@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 function Joke(props) {
-  const [joke, setJoke] = useState();
-  const [characters, setCharacters] = useState();
+  const [characters, setCharacters] = useState(null);
 
   useEffect(() => {
     if (!navigator.onLine) {
-      let jokeact = localStorage.getItem("joke");
-      if (jokeact === null) {
-        setJoke("Loading ...");
+      let charact = localStorage.getItem("characters");
+      if (charact === null) {
+        setCharacters(null);
       } else {
-        setJoke(localStorage.getItem("joke"));
+        setCharacters(JSON.parse(localStorage.getItem("characters")));
       }
+      return;
     }
 
     fetch(
@@ -20,18 +20,41 @@ function Joke(props) {
     )
       .then((result) => result.json())
       .then((result) => {
-        localStorage.setItem("joke", result.value);
-        setJoke("hola");
-        console.log("Result", result);
+        let char = result.data.results;
+        setCharacters(char);
+        console.log("Characters", char);
+        localStorage.setItem("characters", JSON.stringify(char));
       });
   }, []);
 
-  return (
-    <div>
-      <h1>Joke</h1>
-      <p>{joke}</p>
-    </div>
-  );
+  if (characters !== null) {
+    return (
+      <div>
+        <h1>Marverl Characters</h1>
+        {characters.map((value, index) => {
+          console.log("entra1");
+          return (
+            <>
+              <li key={index}>
+                {value.name} {`(${value.id})`}
+              </li>
+              <img
+                src={value.thumbnail.path + "." + value.thumbnail.extension}
+                alt={`${value.name}_img`}
+              />
+            </>
+          );
+        })}
+      </div>
+    );
+  } else {
+    console.log("entra2");
+    return (
+      <div>
+        <p>Loading... (Check your connection)</p>
+      </div>
+    );
+  }
 }
 
 export default Joke;
